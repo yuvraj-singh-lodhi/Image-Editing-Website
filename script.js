@@ -7,21 +7,20 @@ rotateOptions = document.querySelectorAll(".rotate button"),
 previewImg = document.querySelector(".preview-img img"),
 resetFilterBtn = document.querySelector(".reset-filter"),
 chooseImgBtn = document.querySelector(".choose-img"),
-saveImgBtn = document.querySelector(".save-img")
-const removeImgBtn = document.querySelector(".remove-img");
+saveImgBtn = document.querySelector(".save-img");
 
 let brightness = "100", saturation = "100", inversion = "0", grayscale = "0";
 let rotate = 0, flipHorizontal = 1, flipVertical = 1;
 
-saveImgBtn.disabled = true;
 
-removeImgBtn.addEventListener("click", () => {
-    saveImgBtn.disabled = true;
-    previewImg.src = "";
-    previewImg.classList.remove("active");
-    fileInput.value = "";
-  });
-  
+
+const removeImage = () => {
+    const previewImg = document.querySelector('.preview-img img');
+    previewImg.src = 'image-placeholder.png'; // Set the image source to your placeholder image
+}
+
+const removeImgBtn = document.querySelector('.remove-img');
+removeImgBtn.addEventListener('click', removeImage);
 
 const loadImage = () => {
     let file = fileInput.files[0];
@@ -29,15 +28,7 @@ const loadImage = () => {
     previewImg.src = URL.createObjectURL(file);
     previewImg.addEventListener("load", () => {
         resetFilterBtn.click();
-        previewImg.classList.add("active");
-        saveImgBtn.disabled = false;
-
-  if(!previewImg.classList.contains("active")) {
-    document.querySelector(".container").classList.add("disable");
-  }
-  else {
-    document.querySelector(".container").classList.remove("disable");
-  }
+        document.querySelector(".container").classList.remove("disable");
     });
 }
 
@@ -45,6 +36,7 @@ const applyFilter = () => {
     previewImg.style.transform = `rotate(${rotate}deg) scale(${flipHorizontal}, ${flipVertical})`;
     previewImg.style.filter = `brightness(${brightness}%) saturate(${saturation}%) invert(${inversion}%) grayscale(${grayscale}%)`;
 }
+
 
 filterOptions.forEach(option => {
     option.addEventListener("click", () => {
@@ -108,8 +100,6 @@ const resetFilter = () => {
     rotate = 0; flipHorizontal = 1; flipVertical = 1;
     filterOptions[0].click();
     applyFilter();
-    previewImg.classList.remove("active");
-    saveImgBtn.disabled = true;
 }
 
 const saveImage = () => {
@@ -131,8 +121,6 @@ const saveImage = () => {
     link.href = canvas.toDataURL();
     link.click();
 }
-
-
 
 filterSlider.addEventListener("input", updateFilter);
 resetFilterBtn.addEventListener("click", resetFilter);
